@@ -1,16 +1,30 @@
-import express from "express";
+import express, { Express } from "express";
 import config from "config";
 import connect from "./utils/connect";
 import logger from "./utils/logger";
+import router from "./router";
+import cors from "cors";
 
 const port = config.get<number>("port");
 
-const app = express();
+const start = async () => {
+  try {
+    await connect();
 
-app.listen(port, async () => {
-  logger.info(`\nlistening on port ${port}`);
+    const app = express();
 
-  console.log(`:::::::::::::${logger.info}:::::::::::`);
+    app.use(express.json());
 
-  await connect();
-});
+    app.use(express.urlencoded({ extended: false }));
+
+    app.use(cors);
+
+    router(app);
+
+    app.listen(port, () => logger.info(`listening on port ${port}`));
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+start();
