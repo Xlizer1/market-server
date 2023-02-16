@@ -3,7 +3,6 @@ import config from "config";
 import connect from "./utils/connect";
 import logger from "./utils/logger";
 import router from "./router";
-import cors from "cors";
 
 const port = config.get<number>("port");
 
@@ -16,8 +15,6 @@ const start = async () => {
     app.use(express.json());
 
     app.use(express.urlencoded({ extended: false }));
-
-    app.use(cors);
 
     router(app);
 
